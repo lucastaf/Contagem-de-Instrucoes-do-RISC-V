@@ -2,22 +2,27 @@ class riscVInstruction:
     def __init__(self, binario):
         self.opcode = binario[31-6::]
         self.type = self.getInstructionType()
+        rd = binario[31-11:31-6]
+        funct3 = binario[31-14: 31-11]
+        rs1 = binario[31-19:31-14]
+        rs2 = binario[31-24:31-19]
+        funct7 = binario[31-31:31-24]
         
         haveRD = ["R","I","U","J"]
         haveFunct3 = ["R","I","S","B"]
         haveRS1= ["R","I","S","B"]
         haveRS2=["R","S","B"]
-        self.rd = binario[31-11:31-6] if type in haveRD else ""
-        self.funct3 = binario[31-14: 31-11] if type in haveFunct3 else ""
-        self.rs1 = binario[31-19:31-14] if type in haveRS1 else ""
-        self.rs2 = binario[31-24:31-19] if type in haveRS2 else ""
-        self.funct7 = binario[31-31:31-24] if type == "R" else "" 
+        self.rd = rd if self.type in haveRD else ""
+        self.funct3 = funct3 if self.type in haveFunct3 else ""
+        self.rs1 = rs1 if self.type in haveRS1 else ""
+        self.rs2 = rs2 if self.type in haveRS2 else ""
+        self.funct7 = funct7 if self.type == "R" else "" 
         
         imediates = {
-            "I" : self.funct7+self.rs2,
-            "S" : self.funct7+self.rd,
+            "I" : funct7+rs2 ,
+            "S" : funct7+rd,
             "B" : (binario[0]+binario[31-7]+binario[1:32-25]+binario[31-11:31-7]+ "0"),
-            "U" : self.funct7 + self.rs2 + self.rs1 + self.funct3 + "000000000000",
+            "U" : funct7 + rs2 + rs1 + funct3 + "000000000000",
             "J" : binario[0] + binario[31-19:31-11] + binario[11] + binario[1:11]    
         }
         self.imediate = imediates.get(self.type, "")
@@ -39,10 +44,12 @@ class riscVInstruction:
                 return instruction_type
             
     def getInstructionDetails(self) -> str:
-        details = {
-            "R": objectToString({
+        defaultValues = objectToString({
                 "type" : self.type,
                 "opcode" : self.opcode,
+        })
+        details = {
+            "R": objectToString({
                 "rd" : self.rd,
                 "funct3" : self.funct3,
                 "rs1": self.rs1,
@@ -50,45 +57,44 @@ class riscVInstruction:
                 "funct7" : self.funct7
             }),
             "I": objectToString({
-                "type" : self.type,
-                "opcode" : self.opcode,
                 "rd" : self.rd,
                 "funct3" : self.funct3,
                 "rs1": self.rs1,
                 "imd" : self.imediate
             }),
             "S": objectToString({
-                "type" : self.type,
-                "opcode" : self.opcode,
                 "funct3" : self.funct3,
                 "rs1": self.rs1,
                 "rs2" : self.rs2,
                 "imd" : self.imediate
             }),
             "B": objectToString({
-                "type" : self.type,
-                "opcode" : self.opcode,
                 "funct3" : self.funct3,
                 "rs1": self.rs1,
                 "rs2" : self.rs2,
                 "imd" : self.imediate
             }),
             "U": objectToString({
-                "type" : self.type,
-                "opcode" : self.opcode,
                 "rd" : self.rd,
                 "imd" : self.imediate
             }),
             "J": objectToString({
-                "type" : self.type,
-                "opcode" : self.opcode,
                 "rd" : self.rd,
                 "imd" : self.imediate
             })
         }
         
-        return details.get(self.type)
+        return defaultValues +  ", " + details.get(self.type)
     
+    def getAllInfo(self):
+        return [self.type, binStrToInt(self.opcode), binStrToInt(self.rd), binStrToInt(self.funct3), 
+            binStrToInt(self.rs1), binStrToInt(self.rs2), 
+            binStrToInt(self.imediate), binStrToInt(self.funct7)]
+
+    
+def binStrToInt(str):
+    return int(str,2) if str.isdigit() else ""
+
 def objectToString(object): 
     returnValue = ""
     for key, value in object.items():
