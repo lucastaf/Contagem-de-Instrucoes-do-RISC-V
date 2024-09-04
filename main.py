@@ -7,10 +7,10 @@ writer = csv.writer(csvFile)
 
 writer.writerow(["TIPO", "OPCODE", "RD", "FUNCT3", "RS1", "RS2", "IMD", "FUNCT7"])
 
-aluInstructions = ["001001", "0110011", "0011011", "0111011"]
-jumpInstructions = ["1101111", "1100111"]
-branchInstructions = ["1100011"]
-memoryInstructions = ["0000011", "0100011"]
+aluInstructions = ["0010011","0110011", "0011011", "0111011"] #addi, add, addiw, addw, addi
+jumpInstructions = ["1101111", "1100111"] #jal, jalr
+branchInstructions = ["1100011"] #beq
+memoryInstructions = ["0000011", "0100011"] #lw ,sw
 instructionStatistics = {
     "ALU" : 0,
     "JUMP" : 0,
