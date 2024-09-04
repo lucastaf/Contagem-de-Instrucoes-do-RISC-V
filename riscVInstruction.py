@@ -1,5 +1,6 @@
 class riscVInstruction:
     def __init__(self, binario):
+        self.fullInstructions = binario
         self.opcode = binario[31-6::]
         self.type = self.getInstructionType()
         rd = binario[31-11:31-6]

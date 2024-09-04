@@ -18,10 +18,13 @@ instructionStatistics = {
     "MEMORY" : 0,
     "OTHER" : 0,
 }
+
+def getInstructionStaticsText():
+    return "TOTAL DE INSTRUÇÕES: " + str(totalInstructions) + ", ALU: " + str(instructionStatistics["ALU"]) + ", BRANCH: " + str(instructionStatistics["BRANCH"]) + ", JUMP: " + str(instructionStatistics["JUMP"]) + ", MEMORY: " + str(instructionStatistics["MEMORY"]) + ", OTHER: " + str(instructionStatistics["OTHER"])
 #exit()
 for line in file:
     binario = str(bin(int(line, 16)).zfill(8))
-    binario = binario[3:]
+    binario = binario[2:]
     binario = binario.rjust(32,"0")
     instruction = riscVInstruction(binario)
     print(instruction.getInstructionDetails())
@@ -39,4 +42,4 @@ for line in file:
     
 staticsFile = open("statics.txt", 'w')
 totalInstructions = instructionStatistics["ALU"] + instructionStatistics["BRANCH"] + instructionStatistics["JUMP"] + instructionStatistics["MEMORY"] + instructionStatistics["OTHER"] 
-staticsFile.write("TOTAL DE INSTRUÇÕES: " + str(totalInstructions) + ", ALU: " + str(instructionStatistics["ALU"]) + ", BRANCH: " + str(instructionStatistics["BRANCH"]) + ", JUMP: " + str(instructionStatistics["JUMP"]) + ", MEMORY: " + str(instructionStatistics["MEMORY"]) + ", OTHER: " + str(instructionStatistics["OTHER"]))
+staticsFile.write(getInstructionStaticsText())
