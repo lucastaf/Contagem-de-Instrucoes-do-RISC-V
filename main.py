@@ -6,6 +6,18 @@ csvFile.write("sep = , \n")
 writer = csv.writer(csvFile)
 
 writer.writerow(["TIPO", "OPCODE", "RD", "FUNCT3", "RS1", "RS2", "IMD", "FUNCT7"])
+
+aluInstructions = ["001001", "0110011", "0011011", "0111011"]
+jumpInstructions = ["1101111", "1100111"]
+branchInstructions = ["1100011"]
+memoryInstructions = ["0000011", "0100011"]
+instructionStatistics = {
+    "ALU" : 0,
+    "JUMP" : 0,
+    "BRANCH" : 0,
+    "MEMORY" : 0,
+    "OTHER" : 0,
+}
 #exit()
 for line in file:
     binario = str(bin(int(line, 16)).zfill(8))
@@ -13,4 +25,18 @@ for line in file:
     binario = binario.rjust(32,"0")
     instruction = riscVInstruction(binario)
     print(instruction.getInstructionDetails())
+    if instruction.opcode in aluInstructions:
+        instructionStatistics["ALU"] += 1
+    elif instruction.opcode in branchInstructions:
+        instructionStatistics["BRANCH"] += 1
+    elif instruction.opcode in jumpInstructions:
+        instructionStatistics["JUMP"] += 1
+    elif instruction.opcode in memoryInstructions:
+        instructionStatistics["MEMORY"] += 1
+    else:
+        instructionStatistics["OTHER"] += 1
     writer.writerow(instruction.getAllInfo())
+    
+staticsFile = open("statics.txt", 'w')
+totalInstructions = instructionStatistics["ALU"] + instructionStatistics["BRANCH"] + instructionStatistics["JUMP"] + instructionStatistics["MEMORY"] + instructionStatistics["OTHER"] 
+staticsFile.write("TOTAL DE INSTRUÇÕES: " + str(totalInstructions) + ", ALU: " + str(instructionStatistics["ALU"]) + ", BRANCH: " + str(instructionStatistics["BRANCH"]) + ", JUMP: " + str(instructionStatistics["JUMP"]) + ", MEMORY: " + str(instructionStatistics["MEMORY"]) + ", OTHER: " + str(instructionStatistics["OTHER"]))
