@@ -11,5 +11,4 @@ intructionsTypes = {
     "0110011" : "R", #ADD
     "0001111" : "I", #FENCE    
     "1110011" : "I", #CSRRWI
-    
 }
