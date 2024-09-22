@@ -1,5 +1,5 @@
 import csv
-from riscVInstruction import riscVInstruction
+from classes.riscVInstruction import riscVInstruction
 file = open("ROM", 'r')
 csvFile = open("result.csv", 'w', newline='')
 csvFile.write("sep = , \n")
