@@ -1,3 +1,6 @@
+from itertools import chain
+
+
 def getInstructionDetails(self) -> str:
     defaultValues = objectToString({
             "type" : self.type,
@@ -50,3 +53,7 @@ def objectToString(object):
         returnValue += key + ": " + value + ","
     returnValue = returnValue[:-1]
     return returnValue
+
+def haveSharedItems(list1, list2):
+    combinedList = set(chain(list1, list2))
+    return len(combinedList) < len(set(list1)) + len(set(list2))

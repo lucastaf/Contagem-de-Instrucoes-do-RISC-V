@@ -1,4 +1,4 @@
-intructionsTypes = {
+instructionsTypes = {
     "0110111" : "U", #LUI
     "0010111" : "U", #AUPIC
     "1101111" : "J", #JAL

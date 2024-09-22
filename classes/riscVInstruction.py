@@ -1,26 +1,27 @@
-from common import binStrToInt
-from instructionsTypes import intructionsTypes
+from functions.instructionsTypes import instructionsTypes
+from functions.common import binStrToInt
+
+
 class riscVInstruction:
     def __init__(self, binario):
         self.fullInstructions = binario
         self.opcode = binario[31-6::]
-        self.type = intructionsTypes.get(self.opcode)
+        self.type = instructionsTypes.get(self.opcode)
         rd = binario[31-11:31-6]
         funct3 = binario[31-14: 31-11]
         rs1 = binario[31-19:31-14]
         rs2 = binario[31-24:31-19]
         funct7 = binario[31-31:31-24]
         
-        haveRD = ["R","I","U","J"]
-        haveFunct3 = ["R","I","S","B"]
-        haveRS1= ["R","I","S","B"]
-        haveRS2=["R","S","B"]
-        self.rd = rd if self.type in haveRD else ""
-        self.funct3 = funct3 if self.type in haveFunct3 else ""
-        self.rs1 = rs1 if self.type in haveRS1 else ""
-        self.rs2 = rs2 if self.type in haveRS2 else ""
-        self.funct7 = funct7 if self.type == "R" else "" 
-        
+        haveRD = ("R","I","U","J")
+        haveFunct3 = ("R","I","S","B")
+        haveRS1= ("R","I","S","B")
+        haveRS2=("R","S","B")
+        self.rd = rd if self.type in haveRD else None
+        self.funct3 = funct3 if self.type in haveFunct3 else None
+        self.rs1 = rs1 if self.type in haveRS1 else None
+        self.rs2 = rs2 if self.type in haveRS2 else None
+        self.funct7 = funct7 if self.type == "R" else None 
         imediates = {
             "I" : funct7+rs2 ,
             "S" : funct7+rd,
@@ -37,11 +38,13 @@ class riscVInstruction:
         
     def getUsedRegisters(self):
         usedRegisters = []
-        if self.rd not in usedRegisters:
+
+        if self.rd and self.rd != "00000" and self.rd not in usedRegisters:
             usedRegisters.append(self.rd)
-        if self.rs1 not in usedRegisters:
+        if self.rs1 and self.rs1 != "00000" and self.rs1 not in usedRegisters:
             usedRegisters.append(self.rs1)
-        if self.rs2 not in usedRegisters:
+        if self.rs2 and self.rs2 != "00000" and self.rs2 not in usedRegisters:
             usedRegisters.append(self.rs2)
+        return usedRegisters
 
     
