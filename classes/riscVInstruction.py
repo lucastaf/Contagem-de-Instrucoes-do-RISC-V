@@ -36,15 +36,5 @@ class riscVInstruction:
             binStrToInt(self.rs1), binStrToInt(self.rs2), 
             binStrToInt(self.imediate), binStrToInt(self.funct7)]
         
-    def getUsedRegisters(self):
-        usedRegisters = []
-
-        if self.rd and self.rd != "00000" and self.rd not in usedRegisters:
-            usedRegisters.append(self.rd)
-        if self.rs1 and self.rs1 != "00000" and self.rs1 not in usedRegisters:
-            usedRegisters.append(self.rs1)
-        if self.rs2 and self.rs2 != "00000" and self.rs2 not in usedRegisters:
-            usedRegisters.append(self.rs2)
-        return usedRegisters
-
-    
+    def getHexInstruction(self):
+        return hex(int(self.fullInstructions, 2))

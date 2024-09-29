@@ -14,4 +14,7 @@ for line in file:
     binario = str(bin(int(line, 16)).zfill(8))[2:].rjust(32,"0")
     instruction = riscVInstruction(binario)
     program.addInstruction(instruction)
+
+newFile = open("InsertedNops.txt" , "w")
+newFile.write(program.getFullProgram())
     
