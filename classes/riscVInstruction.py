@@ -1,12 +1,13 @@
 from functions.instructionsTypes import instructionsTypes
 from functions.common import binStrToInt
+from typing import Literal
 
 
 class riscVInstruction:
     def __init__(self, binario):
         self.fullInstructions = binario
         self.opcode = binario[31-6::]
-        self.type = instructionsTypes.get(self.opcode)
+        self.type : Literal["U", "J", "B", "I", "S", "R"] = instructionsTypes.get(self.opcode)
         rd = binario[31-11:31-6]
         funct3 = binario[31-14: 31-11]
         rs1 = binario[31-19:31-14]

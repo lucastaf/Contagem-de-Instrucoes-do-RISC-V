@@ -7,7 +7,7 @@ csvFile.write("sep = , \n")
 writer = csv.writer(csvFile)
 
 writer.writerow(["TIPO", "OPCODE", "RD", "FUNCT3", "RS1", "RS2", "IMD", "FUNCT7"])
-program : riscVProgram = riscVProgram()
+program : riscVProgram = riscVProgram(False)
 
 #exit()
 for line in file:
