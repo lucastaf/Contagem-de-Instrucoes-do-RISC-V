@@ -15,6 +15,7 @@ for line in file:
     instruction = riscVInstruction(binario)
     program.addInstruction(instruction)
 
+program.reordenateInstructions()
 newFile = open("InsertedNops.txt" , "w")
 newFile.write(program.getFullProgram())
     

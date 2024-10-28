@@ -39,3 +39,5 @@ class riscVInstruction:
         
     def getHexInstruction(self):
         return hex(int(self.fullInstructions, 2))
+
+nopInstruction = riscVInstruction(str(10011).rjust(32,"0"))
