@@ -34,7 +34,16 @@ class riscVProgram:
                         usedRegisters.append(currentInstruction.rd)  
                     newInstructionIndex += 1
                     
-        
+    def delayBranches(self):
+        for index, instruction in enumerate(self.instructions):
+            if(instruction.type == "B" and index < len(self.instructions) - 2):
+                self.instructions[index] = self.instructions[index + 1]
+                self.instructions[index + 1] = self.instructions[index + 2]
+                self.instructions[index + 2] = instruction
+                if (self.instructions[index - 1].fullInstructions == nopInstruction.fullInstructions):
+                    self.instructions.pop(index - 1)
+                if (self.instructions[index - 2].fullInstructions == nopInstruction.fullInstructions):
+                    self.instructions.pop(index - 2)
     
     def nopInsertion(self, newInstruction : riscVInstruction):
         lastInstructions = self.instructions[-2::]
