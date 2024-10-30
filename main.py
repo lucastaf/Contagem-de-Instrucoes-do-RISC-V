@@ -7,7 +7,7 @@ file = open("ROM", 'r')
 #writer = csv.writer(csvFile)
 #writer.writerow(["TIPO", "OPCODE", "RD", "FUNCT3", "RS1", "RS2", "IMD", "FUNCT7"])
 
-program : riscVProgram = riscVProgram(False)
+program : riscVProgram = riscVProgram(True)
 
 #exit()
 for line in file:
@@ -15,7 +15,7 @@ for line in file:
     instruction = riscVInstruction(binario)
     program.addInstruction(instruction)
 
-#program.reordenateInstructions()
+program.reordenateInstructions()
 #program.delayBranches()
 newFile = open("InsertedNops.txt" , "w")
 newFile.write(program.getFullProgram())

@@ -11,9 +11,14 @@ class riscVProgram:
         #M2A:
         self.nopInsertion(newInstruction)
         self.instructions.append(newInstruction)
+        if self.haveForward and newInstruction.type in ["B" , "J"] :
+            self.instructions.append(nopInstruction)
+            self.instructions.append(nopInstruction)
     
     def reordenateInstructions(self):
         for index, instruction in enumerate(self.instructions):
+            if index >= len(self.instructions) - 1:
+                break
             if instruction.fullInstructions == nopInstruction.fullInstructions:
                 usedRegisters = set()
                 for register in [
@@ -53,7 +58,7 @@ class riscVProgram:
             if ((instruction.rd == newInstruction.rs1 or instruction.rd == newInstruction.rs2) and instruction.rd != None):
                 if (not(self.haveForward)):
                     for _ in range(index + 1):
-                        self.instructions.append(riscVInstruction(str(10011).rjust(32,"0")))
+                        self.instructions.append(nopInstruction)
                 elif instruction.opcode == "0000011" and index == 1:
                     self.instructions.append(nopInstruction)
     
