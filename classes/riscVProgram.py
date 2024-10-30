@@ -32,6 +32,7 @@ class riscVProgram:
                     currentInstruction = self.instructions[newInstructionIndex]
                     if (str(currentInstruction.rd) not in usedRegisters):
                         self.instructions[index] = currentInstruction
+                        currentInstruction.movedInstruction = True
                         self.instructions.pop(newInstructionIndex)
                         break
                     else:
@@ -43,14 +44,15 @@ class riscVProgram:
                     
     def delayBranches(self):
         for index, instruction in enumerate(self.instructions):
-            if(instruction.type == "B" and index < len(self.instructions) - 2):
-                self.instructions[index] = self.instructions[index + 1]
-                self.instructions[index + 1] = self.instructions[index + 2]
-                self.instructions[index + 2] = instruction
-                if (self.instructions[index - 1].fullInstructions == nopInstruction.fullInstructions):
-                    self.instructions.pop(index - 1)
-                if (self.instructions[index - 2].fullInstructions == nopInstruction.fullInstructions):
-                    self.instructions.pop(index - 2)
+            if(instruction.type in ["B","J"] and index < len(self.instructions) - 2):
+                usedRegisters = set()
+                if instruction.type == "B":
+                    usedRegisters.add(instruction.rs1)
+                    usedRegisters.add(instruction.rs2)
+                currentIndex = index - 1
+                currentInstruction = self.instructions[currentIndex]
+                while (currentIndex >= 0 and not(currentInstruction.movedInstruction) ):
+                    pass
     
     def nopInsertion(self, newInstruction : riscVInstruction):
         lastInstructions = self.instructions[-2::]

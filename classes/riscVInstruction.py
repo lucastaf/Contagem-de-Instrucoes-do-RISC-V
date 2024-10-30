@@ -4,8 +4,8 @@ from typing import Literal
 
 
 class riscVInstruction:
-    def __init__(self, binario):
-        self.movedInstruction = False
+    def __init__(self, binario, movedInstruction = False):
+        self.movedInstruction = movedInstruction
         self.fullInstructions = binario
         self.opcode = binario[31-6::]
         self.type : Literal["U", "J", "B", "I", "S", "R"] = instructionsTypes.get(self.opcode)
@@ -41,4 +41,4 @@ class riscVInstruction:
     def getHexInstruction(self):
         return hex(int(self.fullInstructions, 2))
 
-nopInstruction = riscVInstruction(str(10011).rjust(32,"0"))
+nopInstruction = riscVInstruction(str(10011).rjust(32,"0"), True)
