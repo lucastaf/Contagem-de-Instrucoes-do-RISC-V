@@ -1,0 +1,134 @@
+#o código tem 8 linhas de código originalmente
+#deve acrescentar mais 5 linhas na solução 1 
+#deve acrescentar mais 1 linhas na solução 2
+
+
+#ORIGINAL
+.text
+jal zero main
+inicio:
+	sub t3, t4, t5
+	and t0, t1, t2
+	lw  s0, 0(t0)
+	add t0, s0, s0
+	beq t3, t0, inicio
+	sub t4, t5, t0
+	lw  s1, 0(s2)
+	addi s3, s4, 100
+	jalr ra
+	
+main:
+	jal ra, inicio
+	
+#FORWARDING
+.text
+jal zero main
+inicio:
+	sub t3, t4, t5
+	and t0, t1, t2
+	lw  s0, 0(t0)
+	NOP
+	add t0, s0, s0
+	beq t3, t0, inicio
+	sub t4, t5, t0
+	lw  s1, 0(s2)
+	addi s3, s4, 100
+	jalr ra
+	
+main:
+	jal ra, inicio
+	
+#FORWARDING + REORDENAÇÃO
+.text
+jal zero main
+inicio:
+	sub t3, t4, t5 [SAI DAQUI]
+	and t0, t1, t2
+	lw  s0, 0(t0)
+	NOP -> sub t3, t4, t5 [VEM PARA CÁ]
+	add t0, s0, s0
+	beq t3, t0, inicio
+	sub t4, t5, t0
+	lw  s1, 0(s2)
+	addi s3, s4, 100
+	jalr ra
+	
+main:
+	jal ra, inicio
+
+#SOLUÇÃO 2
+.text
+jal zero main
+NOP
+NOP
+inicio:
+	sub t3, t4, t5
+	and t0, t1, t2
+	lw  s0, 0(t0)
+	add t0, s0, s0
+	beq t3, t0, inicio
+	NOP
+	NOP
+	sub t4, t5, t0 
+	lw  s1, 0(s2)
+	addi s3, s4, 100
+	jalr ra
+	NOP
+	NOP
+	
+main:
+	jal ra, inicio
+	NOP
+	NOP
+
+#SOLUÇÃO 3
+.text
+jal zero main
+NOP
+NOP
+inicio:
+	sub t3, t4, t5
+	and t0, t1, t2
+	lw  s0, 0(t0)
+	add t0, s0, s0
+	beq t3, t0, inicio
+	NOP
+	NOP
+	sub t4, t5, t0 
+	lw  s1, 0(s2) [SAI DAQUI]
+	addi s3, s4, 100 [SAI DAQUI]
+	jalr ra
+	NOP -> addi s3, s4, 100 [VEM PARA CÁ]
+	NOP -> lw  s1, 0(s2) [VEM PARA CÁ]
+	
+main:
+	jal ra, inicio
+	NOP
+	NOP
+	
+	
+#SOLUÇÃO 4 = SOLUÇÃO 1 + SOLUÇÃO 3 
+.text
+jal zero main
+NOP
+NOP
+inicio:
+	sub t3, t4, t5 [SAI DAQUI]
+	and t0, t1, t2
+	lw  s0, 0(t0)
+	NOP -> sub t3, t4, t5 [VEM PARA CÁ]
+	add t0, s0, s0
+	beq t3, t0, inicio
+	NOP
+	NOP
+	sub t4, t5, t0 
+	lw  s1, 0(s2) [SAI DAQUI]
+	addi s3, s4, 100 [SAI DAQUI]
+	jalr ra
+	NOP -> addi s3, s4, 100 [VEM PARA CÁ]
+	NOP -> lw  s1, 0(s2) [VEM PARA CÁ]
+	
+main:
+	jal ra, inicio
+	NOP
+	NOP

@@ -1,4 +1,4 @@
-from ast import List
+from ast import List, Set
 from classes.riscVInstruction import riscVInstruction, nopInstruction
 from functions.common import haveSharedItems
 
@@ -15,24 +15,26 @@ class riscVProgram:
     def reordenateInstructions(self):
         for index, instruction in enumerate(self.instructions):
             if instruction.fullInstructions == nopInstruction.fullInstructions:
-                usedRegisters : list[str]  = []
-                if (self.instructions[index - 1].rd not in [None, '00000']):
-                    usedRegisters.append(self.instructions[index -1].rd)
-                if(index >= 2 and self.instructions[index - 2].rd not in [None, '00000']):
-                    usedRegisters.append(self.instructions[index -2].rd)
-                    
-                newInstructionIndex = index + 1
-                while(newInstructionIndex < len(self.instructions) and self.instructions[newInstructionIndex].type != 'B'):
+                usedRegisters = set()
+                for register in [
+                    self.instructions[index + 1].rs1, self.instructions[index + 1].rs2,
+                ]:
+                    if register != None:
+                        usedRegisters.add(register)
+                newInstructionIndex = index - 1
+                while(newInstructionIndex >= 0 and self.instructions[newInstructionIndex].type not in ['B', "J"] and
+                    self.instructions[newInstructionIndex].fullInstructions != nopInstruction.fullInstructions):
                     currentInstruction = self.instructions[newInstructionIndex]
-                    if (currentInstruction.fullInstructions != nopInstruction.fullInstructions and 
-                        str(currentInstruction.rs1) not in usedRegisters and str(currentInstruction.rs2) not in usedRegisters):
-                        
+                    if (str(currentInstruction.rd) not in usedRegisters):
                         self.instructions[index] = currentInstruction
                         self.instructions.pop(newInstructionIndex)
                         break
-                    elif currentInstruction.rd not in [None, '00000']:
-                        usedRegisters.append(currentInstruction.rd)  
-                    newInstructionIndex += 1
+                    else:
+                        if currentInstruction.rs1 not in [None, '00000']:
+                            usedRegisters.add(currentInstruction.rs1)  
+                        if currentInstruction.rs2 not in [None, '00000']:
+                            usedRegisters.add(currentInstruction.rs2)  
+                    newInstructionIndex -= 1
                     
     def delayBranches(self):
         for index, instruction in enumerate(self.instructions):

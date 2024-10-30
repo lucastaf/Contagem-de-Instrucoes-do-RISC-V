@@ -5,6 +5,7 @@ from typing import Literal
 
 class riscVInstruction:
     def __init__(self, binario):
+        self.movedInstruction = False
         self.fullInstructions = binario
         self.opcode = binario[31-6::]
         self.type : Literal["U", "J", "B", "I", "S", "R"] = instructionsTypes.get(self.opcode)
