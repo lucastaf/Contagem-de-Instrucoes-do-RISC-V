@@ -22,7 +22,7 @@ class riscVProgram:
             if index == 0: continue
                 
             if instruction.fullInstructions == nopInstruction.fullInstructions and not(instruction.movedInstruction):
-                self.reordenateNop(index)
+                self.reordenateNop(index, isDelayedBranch=False)
                 pass
             if instruction.type in ["B", "J"]:
                 newInstructionIndex = index + 1
@@ -30,9 +30,9 @@ class riscVProgram:
                     isNopMoved = self.reordenateNop(newInstructionIndex, isDelayedBranch=True)
                     if not(isNopMoved): newInstructionIndex += 1
 
-    def reordenateNop(self, index, isDelayedBranch = False):
+    def reordenateNop(self, index : int, isDelayedBranch = False):
         #se o index for igual ao ultimo item, nao precisa remover a NOP se tiver
-        if index == len(self.instructions) - 1: return
+        if index == len(self.instructions) - 1: return False
         instruction = self.instructions[index]
         if instruction.fullInstructions != nopInstruction.fullInstructions:
             raise Exception("Instruction is not a nop")
@@ -61,25 +61,25 @@ class riscVProgram:
             currentInstructionIndex = currentInstructionIndex - 1
             currentInstruction = self.instructions[currentInstructionIndex]
                 
-        isNopRemoved = False
         while(currentInstructionIndex >= 0 and currentInstruction.type not in ['B', "J"] and
             not(currentInstruction.movedInstruction)):
+            #se a instrução não foi usada, substui com a NOP
             if (str(currentInstruction.rd) not in usedRegisters):
                 self.instructions[index] = currentInstruction
                 currentInstruction.movedInstruction = True
                 self.instructions.pop(currentInstructionIndex)
-                isNopRemoved = True
-                break
+                return True
             else:
+                #senao, inclua seus regisers para a lista de registorios usados
                 if currentInstruction.rs1 not in [None, '00000']:
                     usedRegisters.add(currentInstruction.rs1)  
                 if currentInstruction.rs2 not in [None, '00000']:
                     usedRegisters.add(currentInstruction.rs2)  
             currentInstructionIndex -= 1
             currentInstruction = self.instructions[currentInstructionIndex]
-        if not(isNopRemoved):
-            self.instructions[index].movedInstruction = True
-        return isNopRemoved
+        #Fim do While ----
+        self.instructions[index].movedInstruction = True
+        return False
     
     def nopInsertion(self, newInstruction : riscVInstruction):
         lastInstructions = self.instructions[-2::]
