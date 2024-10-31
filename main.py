@@ -16,7 +16,6 @@ for line in file:
     program.addInstruction(instruction)
 
 program.reordenateInstructions()
-#program.delayBranches()
 newFile = open("InsertedNops.txt" , "w")
 newFile.write(program.getFullProgram())
     

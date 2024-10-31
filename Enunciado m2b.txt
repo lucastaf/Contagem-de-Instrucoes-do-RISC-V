@@ -110,7 +110,7 @@ main:
 #SOLUÇÃO 4 = SOLUÇÃO 1 + SOLUÇÃO 3 
 .text
 jal zero main
-NOP
+NOP #
 NOP
 inicio:
 	sub t3, t4, t5 [SAI DAQUI]
